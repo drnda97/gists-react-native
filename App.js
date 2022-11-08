@@ -1,11 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import {Platform, SafeAreaView, StatusBar, StyleSheet, View} from 'react-native';
+import Loader from "./components/Loader";
+import { useFonts } from 'expo-font';
+import Gists from "./components/Gists";
 
-export default function App() {
+
+const App = () => {
+  const [fontsLoaded] = useFonts({
+    'HelveticaNeue-Bold': require('./assets/fonts/HelveticaNeue-Bold.otf'),
+    'HelveticaNeue': require('./assets/fonts/HelveticaNeue.otf'),
+  });
+
+  if(!fontsLoaded) {
+    return <Loader />
+  }
+
+  if(Platform.OS === "ios") {
+    return (
+        <SafeAreaView style={styles.container}>
+          <Gists />
+        </SafeAreaView>
+    )
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View style={[styles.container, {marginTop: StatusBar.currentHeight}]}>
+      <Gists />
     </View>
   );
 }
@@ -14,7 +33,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
+
+export default App;
